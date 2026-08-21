@@ -1,0 +1,21 @@
+# 1. 虚拟环境 (你的 .venv 文件夹，体积非常大)
+.venv/
+venv/
+ENV/
+env/
+
+# 2. Python 编译缓存 (自动生成的，不需要上传)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 3. VS Code 配置文件 (每个人的编辑器设置不同)
+.vscode/
+.idea/
+
+# 4. 系统垃圾文件 (Mac/Windows 自动生成的隐藏文件)
+.DS_Store
+Thumbs.db
+
+# 5. Pygame 可能生成的临时文件
+*.log

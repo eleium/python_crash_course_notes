@@ -1,0 +1,170 @@
+
+火箭游戏编程流程
+先导入import sys 以彻底的结束程序： sys.exit()
+导入 pygame ,里面有众多的函数、方法，是编制射击游戏的帮手。
+
+
+原则： 主程序通过导入各类，负责协调所有类一起工作，具体的类负责创建自己的属性：     
+       Settings类，设置全局通用的属性，比如屏幕大小，颜色，火箭移动速度等。
+       Rocket类：设置具体实例化对象的通用的属性：火箭的bmp图片，火箭的大小，火箭的颜色，初始位置
+                 设置火箭的动作属性：可以上下左右移动，限制在屏幕内。
+
+                 如何更新update火箭的位置 通过moving=left -->self.x=self.rect.x
+                 绘制火箭状态:blitme(self)
+
+        主程序调用Settings类，设置初始画面。
+        主程序启动游戏，调用火箭实例的实际动作，翻新画面。
+
+                
+
+
+1，创建主类  class RocketGame.
+2,主类RocketGame的构造函数__init__(self)有如下属性：
+  pygame.init() 激活模块pygame
+  定义屏幕大小  self.screen （1200，700）
+  定义屏幕底色  self.bg_color=(230,230,230)
+  定义游戏框 顶部显示游戏名称： self.display.caption('Rocket Game')
+  定义游戏时钟帧率
+  实例化火箭对象： myrocket=Rocket(self)
+
+
+  创建run_game(self)函数
+      开始游戏循环：while True:
+      侦听事件，开始动作
+      
+
+
+    具体的check_event函数来侦听键鼠事件
+      键盘的上下左右动作对应的火箭移动：KEY_UP/DOWN/LEFT/RIGHT 
+      self.key.type==pygame.Key_UP ,myrocket.rect.x+=1
+      限制火箭不能冲出屏幕：比较火箭的rect坐标值与屏幕四周坐标值的关系
+
+  创建update screen函数：
+      self.screen.fill()创建纯色屏幕
+      self.rocket.blitme()在内存中绘制火箭
+      self.flip() 将内存中的画面呈现在屏幕上
+ 
+      更新时钟
+     
+    具体的更新火箭位置：
+    self.key.left==self.pygame.K_LEFT
+    self.x=self.rect.x
+
+
+
+  
+
+创建主程序接口
+if __name__=='__main__':
+  实例化对象：rocket=RocketGame()
+  调用函数，启动游戏： rocket.run_game()
+
+
+
+  创建火箭类：实例化的火箭对象有共同的属性：参数导入主程序的实例化对象：rocket
+      
+      火箭图片导入： self.image=Path('images/rocket.bmp')
+      火箭图片的大小： self.rect=(10,30)或者 self.rect=self.image.get_rect()
+      火箭出现的位置： self.rect.center=self.screen_rect.center
+      火箭实例与游戏实例共享屏幕： self.screen=rocket.screen
+      将游戏界面矩形参数化：self.screen_rect=rocket.screen.get_rect()
+      定义火箭的移动属性为self.x=float(self.rect.x)
+                          self.y=float(self.rect.y)
+      火箭的动作属性：
+      按键抬起状态：self.moving_up,self.moving_down,moving_lefg,moving_right =False
+      即设置了火箭的初始为静止状态，又定义了上下左右的变量名，为下面的具体操作提供变量名：
+
+      self.moving_up.key=pygame.K_UP
+      self.moveing_down.key=pygame.K_DOWN
+      self.moving_left.key=pyagme.K_LEFT
+      self.moving_right.key=pygame.K_RIGHT
+
+      加判断：
+      if self.moving_up and self.rect.up <self.screen_rect.up:
+          self.y += self.rect.y.speed （这个实例没有规定speed，默认为1）
+      其他三种情况
+
+
+      self.rect.x = self.x
+      self.rect.y = self.y
+      因为pygame.rect只认整数，而self.rect会强制取整。
+
+    定义一个绘制火箭的函数
+      self.screen.blitme(self.image,self.rect)
+      
+
+deepseek给出的：
+
+绝对不要同时写！ 最好的策略是：“从上往下，逐层击破，先写副类（基础），再写主类（组装）。”
+
+1. RocketGame (主类)
+def __init__(self):
+    pygame.init()
+    self.screen = pygame.display.set_mode((1200, 700))
+    self.bg_color = (230, 230, 230)
+    pygame.display.set_caption("Rocket Game")
+    self.clock = pygame.time.Clock()
+    self.rocket = Rocket(self) # 把主类自己传给火箭
+
+def run_game(self):
+    while True:
+        self._check_events()
+        self.rocket.update() # 先让火箭算好位置
+        self._update_screen()
+        self.clock.tick(60)
+
+def _check_events(self):
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT: sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP: self.rocket.moving_up = True
+            # ... (补充其他三个键)
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP: self.rocket.moving_up = False
+            # ... (补充其他三个键)
+
+2. Rocket (火箭类)
+def __init__(self, r_game): # 接收主类的对象 r_game
+    self.screen = r_game.screen
+    self.screen_rect = r_game.screen.get_rect() # 必须先拿到矩形
+    
+    self.image = pygame.image.load("images/rocket.bmp")
+    self.rect = self.image.get_rect()
+    self.rect.center = self.screen_rect.center # 放在中央
+    
+    # 移动设置
+    self.x = float(self.rect.x)
+    self.y = float(self.rect.y)
+    self.speed = 1.5 # 速度变量
+    
+    # 移动标志
+    self.moving_up = False
+    self.moving_down = False
+    self.moving_left = False
+    self.moving_right = False
+
+def update(self): # 专门负责按状态更新坐标
+    if self.moving_up and self.rect.top > 0: 
+        self.y -= self.speed
+    if self.moving_down and self.rect.bottom < self.screen_rect.bottom: 
+        self.y += self.speed
+    if self.moving_left and self.rect.left > 0: 
+        self.x -= self.speed
+    if self.moving_right and self.rect.right < self.screen_rect.right: 
+        self.x += self.speed
+        
+    # 把浮点数更新回整数的 rect
+    self.rect.x = self.x
+    self.rect.y = self.y
+
+def blitme(self):
+    self.screen.blit(self.image, self.rect)
+
+
+    
+
+画图三板斧：screen.fill() -> blit() -> pygame.display.flip()
+
+事件循环：for event in pygame.event.get():
+
+按帧跑路：clock.tick(60)
