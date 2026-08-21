@@ -1,0 +1,3 @@
+In python you can use string,int,float to strings!
+In python you can use function and class.
+In python you can use tuple,list,dictionary,set.
