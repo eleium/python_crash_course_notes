@@ -119,6 +119,7 @@
 # 1，建立一个文件夹。
 # 2，进入该文件夹，然后python -m venv project_venv
 # 3,激活虚拟环境： project_venv/Scripts/activate
+# 激活虚拟环境之后，要先pip install django
 # 4,创建项目：django-admin startproject .
 # 这个“点”（.）非常非常重要！它代表“在当前文件夹里直接创建项目”，这样你的项目结构会非常干净，所有文件都平铺在同一个文件夹里。
 # 如果你不加这个点，Django 会额外创建一个子文件夹，导致项目嵌套太深，后续管理会非常麻烦。
