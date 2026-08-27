@@ -114,15 +114,135 @@
 # python manage.py makemigrations：把你的代码变化写成“计划书”。
 # 再次 python manage.py migrate：把计划书应用到数据库，此时你的专属表格（比如 learning_logs_topic）才真正被建立。
 
-# #步骤：
+# 建立web框架，创建一个project项目的步骤：
 
-# 1，建立一个文件夹。
-# 2，进入该文件夹，然后python -m venv project_venv
+# 1，建立一个文件夹，也就是一个项目的根目录。这里叫learning_log文件夹。
+# 2，进入该文件夹，然后创建虚拟环境：python -m venv project_venv
 # 3,激活虚拟环境： project_venv/Scripts/activate
-# 激活虚拟环境之后，要先pip install django
-# 4,创建项目：django-admin startproject .
-# 这个“点”（.）非常非常重要！它代表“在当前文件夹里直接创建项目”，这样你的项目结构会非常干净，所有文件都平铺在同一个文件夹里。
-# 如果你不加这个点，Django 会额外创建一个子文件夹，导致项目嵌套太深，后续管理会非常麻烦。
+# 4,激活虚拟环境之后，要先安装python的web框架： pip install django
+# 5,创建项目：django-admin startproject project .
+# 产生 manage.py文件 和project文件夹，project文件夹下，有： __init__.py  asgi.py   settings.py    urls.py   wsgi .py  文件。
+# 关于 asgi.py 和 wsgi.py（你只列了文件名，没提区别）
 
-# 5,初始化数据库（新建数据库）python manage.py migrate
-# 6,初次运行服务器： python manage.py runserver
+# wsgi.py：同步服务器入口（传统部署，如 Nginx + uWSGI）
+# asgi.py：异步服务器入口（支持 WebSocket、长连接）
+
+# （这个“点”（.）非常非常重要！它代表“在当前文件夹里直接创建项目”，这样你的项目结构会非常干净，所有文件都平铺在同一个文件夹里。
+# 如果你不加这个点，Django 会额外创建一个子文件夹，导致项目嵌套太深，后续管理会非常麻烦。）
+
+# 6,初始化数据库（新建数据库）python manage.py migrate 生成数据库：db.sqlite3
+# db ：data base : 是“数据库”的简称，sqlite3 是它用的文件格式。这个文件就是你把表格、数据、密码等所有东西“存进去”的地方。
+# sqlite3:是一个轻量化的数据库。
+# 7,初次运行服务器： python manage.py runserver
+# 以上是搭建web框架，并创建一个project项目的必要步骤，后续就可以在这个框架内，添加、丰富内容了。
+
+# 典型的django项目文件夹内容：
+"""
+learning_log/                    <-- 项目根目录（你的“家”）
+│
+├── manage.py                    <-- ✅ 总控制台（在这里跑命令）
+│
+├── ll_project/                  <-- ✅ 存放配置（只有 settings.py, urls.py 等）
+│
+├── learning_logs/               <-- （看你刚刚创建了什么）应用文件夹
+│
+├── ll_venv/                     <-- ✅ 虚拟环境
+│
+├── db.sqlite3                   <-- ✅ 数据库（由 migrate 生成）
+│
+└── 1.py                         <-- 你的练习文件
+"""
+
+"""
+# 1. 创建应用
+python manage.py startapp learning_logs  创建一个叫learning_logs的app,一个应用
+
+# 2. 编写模型：打开 learning_logs/models.py，定义类 Topic
+# （包括 text 和 date_add 字段）
+
+# 3. 登记应用：打开根目录下的 settings.py，在 INSTALLED_APPS 里添加 'learning_logs'
+
+# 4. 生成迁移计划：
+python manage.py makemigrations learning_logs
+# 完成后，会生成一个 0001_initial.py 文件（这就是数据库结构的“图纸”）
+
+# 5. 执行迁移：
+python manage.py migrate
+# 这个动作会把图纸上的结构，真正同步到数据库表里
+"""
+
+
+# Django管理网站：
+# 1，创建超级用户
+# cd learning_log  -->python manage.py createsuperuser 填写管理员名字和密码。这里用ll_admin当作管理员的名字
+
+# 向管理网站注册模型
+# 创建pyton manage.py startapp learning_logs时，在models.py模块的目录中，还创建了一个admin.py的文件。
+# 顾名思义，admin.py 是有关管理员的内容
+
+# 要保证runserver 在运行，才能访问django的网页。如果没有，在虚拟环境中，重新python manage.py runserver
+
+# 用刚才的admin注册名： ll_admin 和密码登录
+
+# 添加主题
+# 向管理网站注册Topic后，可以添加第一个主题了。
+# Topic 是一个“类”，Topic 类 = 一张空白的 Excel 表格模板。
+# 但它的本质是“一张数据库表格的设计图纸，在写下text和date_add时，Topic会自动变成数据库learning_logs_topic的表的两个列：
+# text：这一列用来存你的学习主题（比如：“Python”、“Django 入门”）。
+# date_add：这一列自动记录你是什么时候创建这个主题的。
+
+# 用网站的Topic下的add，添加两个主题：Chess_国际象棋 和 Rock Climb_攀岩
+
+# 定义模型Entry
+# 把Entry 的模型，放入models.py中
+# 每次修改完Entry,就可以 ： (1),创建可迁徙文件： python manage.py makemigrations    (2),迁徙文件： python manage.py migrate
+
+# 新的子文件entry创建好了之后，就可以在管理网站中添加这个子文件Entry的text了。 text框内这次没有文字限制了。max_lenght=200.
+
+# 完成上面的添加Entry之后，可以进入django的shell:
+# python manage.py shell 进入一个交互环境：from learning_logs.models import Topic先从learning_logs app中导入Topic,
+# Topic.objects.all() 显示这个Topic文件袋里面的所有内容，即 查询集。这个查询集可以像列表一样被遍历。
+
+# topics=Topic.objects.all()
+# for topic in topics:
+#     print(topic.id,topic)
+#--->1 pythn
+#    2 Chess_国际象棋
+#    3 Rock_Climbing_攀岩
+
+#得到各个entry 的topic(主题对象) 的id.
+
+# #你的目的	推荐写法	优点
+# 只想看名单（有几个人，叫什么）	                 print(topics)	                            速度快，直接看全局
+# 想深入分析或查看属性（比如每个人的 text）        	for topic in topics: print(topic)	        能把每一个人分开来检查
+
+#用列表推导式来获取属性：
+# topics = Topic.objects.all()
+# # 方式一：使用列表推导式（最优雅）
+# print([topic.text for topic in topics])
+
+# # 方式二：甚至可以直接用 .values_list()
+# print(topics.values_list('text', flat=True))
+#“变扁（Flat）”： 把原本的“二维（嵌套的）”结构，压成了“一维（平铺的）”结构。
+
+
+
+#用Topic.objects.get()方法获取该对象，并查看其属性：
+
+#先把Topic.objects.get()赋值给一个变量： t=Topic.objects.get(id=2)
+#仅限 shell 调试，生产环境慎用，因为如果id=2不存在，就会崩溃。
+#调用属性： t.text    t.date_add
+
+#查看与主题相关联的条目。
+#前面给模型Entry 定义了一个属性：topic,是一个外键ForeignKey,用来将条目和主题关联起来。
+
+
+#获取与特定主题相关联的所有条目：
+#还是在shell 下：
+#t.entry_set.all()
+#将显示：<QuerySet [<Entry: The opening is the first part of the game,roughly ...>, <Entry: In the opening phase of the game,it's important to...>]>
+#这是关于Chess_国际象棋的两个entry的text.指向了同一个主题：Chess_国际象棋
+#Django的用法，一个描述符。用models.py 中的Entry类（一个主题）的小写加下划线加set.all()的形式，获得与同一个主题相关联的条目。
+
+#entry_set 的本质不是 Django 的“特殊语法”，而是 Python 的“描述符协议”在 ORM 中的落地。
+# 等复习高阶时，我会用 Django 的 ForeignKey 反推描述符的实现原理
