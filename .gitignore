@@ -1,24 +1,57 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *.so
-.Python
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+media/
 
 # Virtual Environment
-*venv/
-env/
 venv/
-ENV/
+env/
+ll_venv/
+.venv
+*.venv
 
-# Database
-*.sqlite3
-db.sqlite3
+# VS Code
+.vscode/
+*.code-workspace
 
 # IDE
-.vscode/
 .idea/
-*.swp
+*.iml
 
 # OS
 .DS_Store
 Thumbs.db
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# ruff
+.ruff_cache/
+
+# pytest
+.pytest_cache/
+
+# node_modules (if any)
+node_modules/
